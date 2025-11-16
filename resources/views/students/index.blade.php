@@ -9,45 +9,75 @@
         </div>
 
         <hr>
+
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
-        <div class="row g-4 mt-2">
-            @foreach ($students as $student)
-                <div class="col-md-4">
-                    <div class="card shadow-sm border">
-                        <img src="{{ asset('storage/' . $student->photo) }}" class="card-img-top" alt="Student photo"
-                            style="height: 200px; object-fit: cover;">
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered table-striped align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>No</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-                        <div class="card-body border-top">
-                            <h5 class="card-title">
-                                <a href="{{ route('students.show', $student->id) }}" class="text-decoration-none">
+                <tbody>
+                    @foreach ($students as $student)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+
+                            <td>
+                                <img src="{{ asset('storage/' . $student->photo) }}"
+                                     alt="Photo"
+                                     class="rounded"
+                                     style="width: 70px; height: 70px; object-fit: cover;">
+                            </td>
+
+                            <td>
+                                <a href="{{ route('students.show', $student->id) }}" class="text-decoration-none fw-bold">
                                     {{ $student->last_name . ' ' . $student->first_name }}
                                 </a>
-                            </h5>
+                            </td>
 
-                            <p class="mb-1"><strong>Gender:</strong> {{ $student->gender }}</p>
-                            <p class="mb-1"><strong>Address:</strong> {{ $student->address }}</p>
+                            <td>{{ $student->gender }}</td>
+                            <td>{{ $student->address }}</td>
 
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('students.show', $student->id) }}" class="btn btn-primary btn-sm">View</a>
-                                <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('students.destroy', $student) }}" method="post"
-                                    onsubmit="return confirm('Are you sure you want to delete this student?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </div>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
 
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+                                    <a href="{{ route('students.show', $student->id) }}" class="btn btn-primary btn-sm">
+                                        View
+                                    </a>
+
+                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ route('students.destroy', $student) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Are you sure you want to delete this student?');">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
         </div>
-
     </div>
 </x-layout>
